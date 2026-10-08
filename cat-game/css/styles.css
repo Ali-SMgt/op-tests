@@ -1,0 +1,514 @@
+/* ============================================================
+   Get The Cat Food — pink / purple / blue playful theme
+   ============================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* --- No scrolling, ever --- */
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #f6e8ff;
+  font-family: "Segoe UI", "Trebuchet MS", "Comic Sans MS", sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+/* --- Main fixed-viewport container --- */
+#game-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffd6e8 0%, #e6d6ff 50%, #d6eaff 100%);
+}
+
+/* --- Background image layer (30% opacity, isolated from UI) --- */
+#bg-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("../assets/images/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ============================================================
+   UI boxes (top-left coupons, top-right food counter)
+   ============================================================ */
+#ui-header {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px;
+  pointer-events: none;
+}
+
+.ui-box {
+  background: linear-gradient(135deg, rgba(255, 105, 180, 0.92), rgba(155, 89, 255, 0.92));
+  color: #fff;
+  border: 3px solid #fff;
+  border-radius: 18px;
+  padding: 12px 18px;
+  box-shadow: 0 6px 18px rgba(155, 89, 255, 0.35);
+  text-align: center;
+  min-width: 160px;
+}
+
+.top-left {
+  background: linear-gradient(135deg, rgba(155, 89, 255, 0.92), rgba(89, 140, 255, 0.92));
+}
+
+/* Keep the food counter pinned to the top-right even when the
+   coupon box (its flex sibling) is hidden. */
+#food-box {
+  margin-left: auto;
+}
+
+/* --- Coupon image inside the top-left coupon box --- */
+.coupon-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.coupon-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.coupon-img-wrap {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  border: 2px solid #fff;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ff9ed2, #b07eff 55%, #7eb6ff);
+  box-shadow: 0 4px 10px rgba(155, 89, 255, 0.35);
+}
+
+/* --- Shared image space: fallback beneath, photo on top --- */
+.img-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(74, 43, 107, 0.5);
+}
+
+.coupon-img-wrap img,
+.reward-img-wrap img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Missing file (added manually later): keep the themed placeholder visible */
+.coupon-img-wrap img.missing,
+.reward-img-wrap img.missing {
+  display: none;
+}
+
+.box-label {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.box-value {
+  font-size: 22px;
+  font-weight: 800;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.food-counter-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.treat-countdown {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 2px dashed rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 600;
+  font-style: italic;
+  color: #ffe9f6;
+}
+
+/* --- Center banner: title + subtitle --- */
+.center-banner {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  text-align: center;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(6px);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  padding: 10px 26px;
+  box-shadow: 0 6px 16px rgba(255, 105, 180, 0.25);
+}
+
+.game-title {
+  font-size: 26px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ff5fa2, #9b59ff, #598cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 1px;
+}
+
+.game-subtitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a4fbf;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   Playable area
+   ============================================================ */
+#play-area {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* --- Cat character --- */
+.cat-character {
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  transform: translate(-50%, -50%);
+  font-size: 34px;
+  font-weight: 700;
+  color: #4a2b6b;
+  text-shadow:
+    0 0 8px rgba(255, 145, 210, 0.9),
+    0 0 16px rgba(155, 89, 255, 0.5);
+  z-index: 20;
+  pointer-events: none;
+  will-change: left, top;
+  transition: none;
+}
+
+/* --- Food circles --- */
+#food-container {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.food-circle {
+  position: absolute;
+  font-size: 30px;
+  line-height: 1;
+  color: #ff4fa3;
+  text-shadow:
+    0 0 6px rgba(255, 79, 163, 0.8),
+    0 0 14px rgba(155, 89, 255, 0.6);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: left, top, opacity;
+  animation: foodPop 0.35s ease-out;
+}
+
+.food-circle.expiring {
+  animation: foodPulse 0.5s ease-in-out infinite alternate;
+}
+
+.food-circle.collected {
+  animation: foodCollect 0.25s ease-in forwards;
+}
+
+/* Pause decorative food animations once the game has ended */
+#game-container.game-over .food-circle {
+  animation-play-state: paused;
+}
+
+@keyframes foodPop {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes foodPulse {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1.35);
+    opacity: 0.55;
+  }
+}
+
+@keyframes foodCollect {
+  0% {
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Small floating "+1" feedback */
+.collect-feedback {
+  position: absolute;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ff5fa2;
+  text-shadow: 0 0 6px #fff;
+  transform: translate(-50%, -50%);
+  z-index: 22;
+  pointer-events: none;
+  animation: floatUp 0.7s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -160%);
+  }
+}
+
+/* ============================================================
+   Modals (trust screen + game over)
+   ============================================================ */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 182, 213, 0.75),
+    rgba(197, 171, 255, 0.75),
+    rgba(171, 205, 255, 0.75)
+  );
+  backdrop-filter: blur(4px);
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.modal-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.modal-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 4px solid #ff9ed2;
+  border-radius: 26px;
+  padding: 42px 56px;
+  text-align: center;
+  box-shadow:
+    0 12px 40px rgba(155, 89, 255, 0.4),
+    0 0 60px rgba(255, 159, 211, 0.4);
+  animation: modalIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 90vw;
+}
+
+@keyframes modalIn {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-title {
+  font-size: 34px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ff5fa2, #9b59ff, #598cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 26px;
+  letter-spacing: 1px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+}
+
+/* --- Buttons --- */
+.btn {
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 44px;
+  cursor: pointer;
+  color: #fff;
+  letter-spacing: 1px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px) scale(1.05);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Buttons pop in whenever the trust box is redisplayed */
+.modal-buttons .btn {
+  animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-pink {
+  background: linear-gradient(135deg, #ff7eb3, #ff5fa2);
+  box-shadow: 0 6px 16px rgba(255, 95, 162, 0.45);
+}
+
+.btn-purple {
+  background: linear-gradient(135deg, #b07eff, #9b59ff);
+  box-shadow: 0 6px 16px rgba(155, 89, 255, 0.45);
+}
+
+/* --- Game over card --- */
+.game-over-card {
+  border-color: #9b59ff;
+  background: linear-gradient(135deg, #ffe3f2 0%, #e9dcff 50%, #dceaff 100%);
+  text-align: center;
+  max-height: 94vh;
+  overflow: hidden;
+}
+
+.game-over-cat {
+  font-size: 44px;
+  color: #4a2b6b;
+  text-shadow:
+    0 0 10px rgba(255, 145, 210, 0.9),
+    0 0 20px rgba(155, 89, 255, 0.5);
+  margin-bottom: 16px;
+}
+
+/* Large centered reward image inside the final popup */
+.reward-img-wrap {
+  position: relative;
+  width: min(400px, 68vw);
+  aspect-ratio: 3 / 2;
+  margin: 0 auto 18px;
+  border-radius: 18px;
+  border: 4px solid #fff;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ff9ed2, #b07eff 55%, #7eb6ff);
+  box-shadow: 0 10px 28px rgba(155, 89, 255, 0.45);
+}
+
+.reward-img-wrap .img-fallback {
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+
+.game-over-title {
+  font-size: 30px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ff5fa2, #9b59ff, #598cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 1px;
+}
+
+/* Keep the reward popup comfortable on short viewports (no scrolling) */
+@media (max-height: 640px) {
+  .reward-img-wrap {
+    width: min(300px, 58vw);
+  }
+  .game-over-cat {
+    font-size: 32px;
+    margin-bottom: 10px;
+  }
+  .game-over-title {
+    font-size: 23px;
+  }
+  .game-over-card {
+    padding: 24px 34px;
+  }
+}
+
+/* --- Pause overlay hint when window loses focus --- */
+body.paused #play-area {
+  filter: saturate(0.7);
+}
+
+/* Keep things usable at small desktop sizes */
+@media (max-width: 700px) {
+  .game-title {
+    font-size: 19px;
+  }
+  .game-subtitle {
+    font-size: 11px;
+  }
+  .ui-box {
+    min-width: 120px;
+    padding: 8px 12px;
+  }
+  .modal-card {
+    padding: 30px 24px;
+  }
+  .modal-title {
+    font-size: 24px;
+  }
+  .btn {
+    font-size: 17px;
+    padding: 12px 30px;
+  }
+}

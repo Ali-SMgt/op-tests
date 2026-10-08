@@ -1,0 +1,2 @@
+Place your background image here, named exactly: bg.jpg
+(final path: cat-game/assets/images/bg.jpg)
