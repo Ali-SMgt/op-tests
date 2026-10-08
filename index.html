@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Préstamos - Laboratorio Universitario</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header-principal">
+    <div class="contenedor">
+      <h1>Laboratorio Universitario</h1>
+      <p class="subtitulo">Sistema de Préstamos y Control de Equipos</p>
+    </div>
+  </header>
+
+  <main class="contenedor principal">
+    <!-- Mensaje de estado / notificación -->
+    <section id="contenedor-mensaje" class="mensaje-alerta oculto" role="alert" aria-live="polite">
+      <p id="texto-mensaje"></p>
+    </section>
+
+    <!-- Sección de Registro de Préstamo -->
+    <section class="tarjeta seccion-formulario" aria-labelledby="titulo-registro">
+      <h2 id="titulo-registro">Registrar Nuevo Préstamo</h2>
+      <form id="formulario-prestamo" novalidate>
+        <div class="grupo-campo">
+          <label for="solicitante">Nombre del solicitante:</label>
+          <input
+            type="text"
+            id="solicitante"
+            name="solicitante"
+            placeholder="Ejemplo: Ana García"
+            required
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="grupo-campo">
+          <label for="equipo-select">Equipo a solicitar:</label>
+          <select id="equipo-select" name="equipo" required>
+            <option value="">-- Selecciona un equipo --</option>
+          </select>
+        </div>
+
+        <div class="grupo-campo">
+          <label for="fecha-prestamo">Fecha del préstamo:</label>
+          <input
+            type="date"
+            id="fecha-prestamo"
+            name="fecha"
+            required
+          >
+        </div>
+
+        <div class="grupo-acciones">
+          <button type="submit" id="btn-registrar" class="boton boton-primario">Registrar Préstamo</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Sección de Catálogo de Equipos -->
+    <section class="tarjeta seccion-catalogo" aria-labelledby="titulo-catalogo">
+      <div class="cabecera-seccion">
+        <h2 id="titulo-catalogo">Catálogo de Equipos</h2>
+        <div class="filtros-contenedor" role="group" aria-label="Filtrar catálogo por estado">
+          <span class="etiqueta-filtro">Filtrar por:</span>
+          <button type="button" class="boton-filtro activo" data-filtro="todos">Todos</button>
+          <button type="button" class="boton-filtro" data-filtro="disponibles">Disponibles</button>
+          <button type="button" class="boton-filtro" data-filtro="prestados">Prestados</button>
+        </div>
+      </div>
+
+      <div class="tabla-responsiva">
+        <table class="tabla" id="tabla-catalogo">
+          <thead>
+            <tr>
+              <th scope="col">Identificador</th>
+              <th scope="col">Equipo</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo-catalogo">
+            <!-- Filas generadas dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+      <p id="catalogo-vacio" class="mensaje-vacio oculto">No hay equipos que coincidan con el filtro seleccionado.</p>
+    </section>
+
+    <!-- Sección de Préstamos Activos -->
+    <section class="tarjeta seccion-prestamos-activos" aria-labelledby="titulo-activos">
+      <div class="cabecera-seccion">
+        <h2 id="titulo-activos">Préstamos Activos</h2>
+      </div>
+
+      <div class="tabla-responsiva">
+        <table class="tabla" id="tabla-activos">
+          <thead>
+            <tr>
+              <th scope="col">Identificador</th>
+              <th scope="col">Equipo</th>
+              <th scope="col">Solicitante</th>
+              <th scope="col">Fecha de Préstamo</th>
+              <th scope="col">Acción</th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo-activos">
+            <!-- Filas generadas dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+      <p id="activos-vacio" class="mensaje-vacio">No hay préstamos activos en este momento.</p>
+    </section>
+
+    <!-- Sección de Historial de Préstamos Devueltos -->
+    <section class="tarjeta seccion-historial" aria-labelledby="titulo-historial">
+      <div class="cabecera-seccion">
+        <h2 id="titulo-historial">Historial de Préstamos Devueltos</h2>
+      </div>
+
+      <div class="tabla-responsiva">
+        <table class="tabla" id="tabla-historial">
+          <thead>
+            <tr>
+              <th scope="col">Identificador</th>
+              <th scope="col">Equipo</th>
+              <th scope="col">Solicitante</th>
+              <th scope="col">Fecha de Préstamo</th>
+              <th scope="col">Fecha de Devolución</th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo-historial">
+            <!-- Filas generadas dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+      <p id="historial-vacio" class="mensaje-vacio">No se registran devoluciones previas en el historial.</p>
+    </section>
+  </main>
+
+  <footer class="footer-principal">
+    <div class="contenedor">
+      <p>Laboratorio Universitario &mdash; Control de Préstamos de Equipos</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
